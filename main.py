@@ -1,7 +1,7 @@
 import json
 from fastapi import FastAPI, UploadFile, Form
 from fastapi.responses import JSONResponse
-from utils import extract_text_from_file
+from read_file import extract_text_from_file
 from langchain_helpers import generate_email, EmailContent
 
 app = FastAPI()

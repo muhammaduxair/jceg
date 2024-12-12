@@ -1,0 +1,13 @@
+PyPDF2
+python-docx
+pandas
+pywin32
+langchain
+langchain_groq
+python-dotenv
+streamlit
+fastapi
+uvicorn
+pandas
+chardet
+python-multipart
