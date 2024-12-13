@@ -26,7 +26,7 @@ export default function ResumeUpload() {
           <div className="flex items-center justify-center w-full">
             <label
               htmlFor="dropzone-file"
-              className="flex flex-col items-center justify-center w-full h-48 md:h-64 border-2 border-zinc-600 border-dashed rounded-lg cursor-pointer bg-zinc-700 hover:bg-zinc-600"
+              className="flex flex-col items-center justify-center w-full h-36 md:h-48 border-2 border-zinc-600 border-dashed rounded-lg cursor-pointer bg-zinc-700 hover:bg-zinc-600"
             >
               <div className="flex flex-col items-center justify-center pt-5 pb-6">
                 <Upload className="w-10 h-10 mb-3 text-zinc-100" />
@@ -35,7 +35,7 @@ export default function ResumeUpload() {
                   and drop
                 </p>
                 <p className="text-xs text-zinc-100">
-                  PDF, DOCX, TXT, CSV (MAX. 800x400px)
+                  PDF, DOCX, TXT, CSV (max. size: 2MB)
                 </p>
               </div>
               <input
@@ -52,11 +52,6 @@ export default function ResumeUpload() {
               <p className="text-sm text-zinc-100">
                 Selected file: {file.name}
               </p>
-              <div className="mt-2 p-4 bg-zinc-700 rounded-lg">
-                <p className="text-sm text-zinc-100">
-                  Resume content preview would appear here...
-                </p>
-              </div>
             </div>
           )}
         </CardContent>

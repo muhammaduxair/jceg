@@ -17,7 +17,7 @@ export default function JobDescription() {
         <Textarea
           id="job-description"
           placeholder="Enter the job description..."
-          className="h-40 bg-zinc-800 border-zinc-700 text-white placeholder-zinc-300 placeholder:text-zinc-300"
+          className="h-52 bg-zinc-800 border-zinc-700 text-white placeholder-zinc-300 placeholder:text-zinc-300"
         />
       </div>
     </motion.div>
