@@ -6,7 +6,7 @@ from fastapi import UploadFile
 import chardet
 
 
-async def read_file(file: UploadFile) -> str:
+async def read_file_handler(file: UploadFile) -> str:
     """
     Read various file types from an UploadFile and return their content as a string.
     Supported file types: PDF, DOCX, TXT, CSV, DOC

@@ -1,6 +1,5 @@
 import streamlit as st
-from read_file import read_file
-from langchain_helpers import generate_email
+from utils import generate_email, read_file_handler
 from starlette.datastructures import UploadFile
 import io
 import asyncio
@@ -39,7 +38,7 @@ if st.button('Generate Email', use_container_width=True,
              disabled=uploaded_file is None or job_description == ''):
 
     async def async_handler():
-        resume_text = await read_file(
+        resume_text = await read_file_handler(
             convert_streamlit_to_fastapi_file(uploaded_file))
 
         placeholder = st.empty()

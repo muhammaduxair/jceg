@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 from langchain_groq import ChatGroq
 from langchain.prompts import PromptTemplate
 from typing import TypedDict, Optional
-from json_parser import clean_and_parse_json
+from utils import clean_and_parse_json
 import json
 
 load_dotenv()
