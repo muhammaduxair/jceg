@@ -1,36 +1,20 @@
 "use client";
 
-import { useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 
-const loadingTexts = [
-  "Generating email",
-  "Loading your resume",
-  "Reading job description",
-  "Please wait, email is generating",
-];
+interface GenerateButtonProps {
+  onClick: () => void;
+  isGenerating: boolean;
+  btnLoadingText: string;
+}
 
-export default function GenerateButton() {
-  const [isLoading, setIsLoading] = useState(false);
-  const [loadingText, setLoadingText] = useState("");
-
-  const handleGenerate = () => {
-    setIsLoading(true);
-    let i = 0;
-    const interval = setInterval(() => {
-      setLoadingText(loadingTexts[i]);
-      i = (i + 1) % loadingTexts.length;
-    }, 2000);
-
-    // Simulate API call
-    setTimeout(() => {
-      clearInterval(interval);
-      setIsLoading(false);
-    }, 8000);
-  };
-
+export default function GenerateButton({
+  onClick,
+  isGenerating,
+  btnLoadingText,
+}: GenerateButtonProps) {
   return (
     <motion.div
       className="flex"
@@ -39,15 +23,15 @@ export default function GenerateButton() {
       transition={{ duration: 0.8, delay: 0.6 }}
     >
       <Button
-        onClick={handleGenerate}
-        disabled={isLoading}
+        onClick={onClick}
+        disabled={isGenerating}
         className="bg-white hover:bg-neutral-300 text-zinc-800 font-bold py-2 px-4 rounded-lg text-lg w-full"
         size="lg"
       >
-        {isLoading ? (
+        {isGenerating ? (
           <>
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            {loadingText}
+            {btnLoadingText}
           </>
         ) : (
           "Generate Email"

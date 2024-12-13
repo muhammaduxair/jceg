@@ -6,9 +6,70 @@ import JobDescription from "@/components/job-description";
 import GenerateButton from "@/components/generate-button";
 import EmailResults from "@/components/email-results";
 import { useNavigationHeight } from "@/hooks/use-navigation-height";
+import { useCallback, useState } from "react";
+import { IGenerateEmailResponse } from "@/utils";
+import apiService from "@/utils/api-service";
+
+const btnLoadingTexts = [
+  "Loading your resume",
+  "Reading job description",
+  "Please wait, email is generating",
+];
 
 export default function Home() {
   const navHeight = useNavigationHeight();
+
+  // ====== State Management ======
+  const [resume, setResume] = useState<File | null>(null);
+  const [jobDescription, setJobDescription] = useState("");
+  const [generatedResponse, setGeneratedResponse] =
+    useState<IGenerateEmailResponse>({} as IGenerateEmailResponse);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [btnLoadingText, setBtnLoadingText] = useState("");
+  // ==============================
+
+  // ====== Callbacks =============
+  const handleResumeUpload = useCallback((file: File) => {
+    setResume(file);
+  }, []);
+
+  const handleJobDescriptionChange = useCallback((description: string) => {
+    setJobDescription(description);
+  }, []);
+  // ==============================
+
+  const handleGenerate = async () => {
+    if (!resume || !jobDescription) {
+      alert("Please upload a resume and enter a job description.");
+      return;
+    }
+
+    setIsGenerating(true);
+    let i = 0;
+    const interval = setInterval(() => {
+      setBtnLoadingText(btnLoadingTexts[i]);
+      i = (i + 1) % btnLoadingTexts.length;
+    }, 2000);
+    // ====== Your Actual Logic Starts Here ======
+
+    const formData = new FormData();
+    formData.append("resume_file", resume as File);
+    formData.append("job_description", jobDescription);
+
+    const response = await apiService.post<IGenerateEmailResponse>(
+      "generate-email",
+      formData,
+      {
+        uploadingFile: true,
+      }
+    );
+
+    setGeneratedResponse(response);
+
+    // ====== Your Actual Logic Ends Here ======
+    clearInterval(interval);
+    setIsGenerating(false);
+  };
 
   return (
     <main
@@ -19,10 +80,17 @@ export default function Home() {
         <Hero />
       </div>
       <div className="container mx-auto px-4 py-8 space-y-8 md:py-12 md:space-y-12 max-w-4xl">
-        <ResumeUpload />
-        <JobDescription />
-        <GenerateButton />
-        <EmailResults />
+        <ResumeUpload onUpload={handleResumeUpload} />
+        <JobDescription
+          value={jobDescription}
+          onChange={handleJobDescriptionChange}
+        />
+        <GenerateButton
+          onClick={handleGenerate}
+          isGenerating={isGenerating}
+          btnLoadingText={btnLoadingText}
+        />
+        {generatedResponse.email && <EmailResults data={generatedResponse} />}
       </div>
     </main>
   );

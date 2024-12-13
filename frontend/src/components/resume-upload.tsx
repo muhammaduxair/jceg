@@ -1,18 +1,27 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { motion } from "framer-motion";
 import { Upload } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
-export default function ResumeUpload() {
+interface ResumeUploadProps {
+  onUpload: (file: File) => void;
+}
+
+export default function ResumeUpload({ onUpload }: ResumeUploadProps) {
   const [file, setFile] = useState<File | null>(null);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setFile(e.target.files[0]);
-    }
-  };
+  const handleFileChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (file) {
+        setFile(file);
+        onUpload(file);
+      }
+    },
+    [onUpload]
+  );
 
   return (
     <motion.div

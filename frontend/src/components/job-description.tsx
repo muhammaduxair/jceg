@@ -4,7 +4,15 @@ import { motion } from "framer-motion";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 
-export default function JobDescription() {
+interface JobDescriptionProps {
+  value: string;
+  onChange: (value: string) => void;
+}
+
+export default function JobDescription({
+  value,
+  onChange,
+}: JobDescriptionProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -18,6 +26,8 @@ export default function JobDescription() {
           id="job-description"
           placeholder="Enter the job description..."
           className="h-52 bg-zinc-800 border-zinc-700 text-white placeholder-zinc-300 placeholder:text-zinc-300"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
         />
       </div>
     </motion.div>
