@@ -51,7 +51,8 @@ class ApiService {
         return {
           isSuccess: false,
           data: null,
-          error: errorData.message || response.statusText,
+          error:
+            errorData?.message ?? errorData?.detail ?? response?.statusText,
         };
       }
 

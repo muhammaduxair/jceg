@@ -6,7 +6,7 @@ import { Upload } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import toast from "react-hot-toast";
 
-const MAX_FILE_SIZE = 2 * 1024 * 1025; // 2MB in bytes
+const MAX_FILE_SIZE = 1 * 1024 * 1025; // 1MB in bytes
 
 interface ResumeUploadProps {
   onUpload: (file: File) => void;
@@ -27,7 +27,7 @@ export default function ResumeUpload({ onUpload }: ResumeUploadProps) {
         }
 
         if (file.size > MAX_FILE_SIZE) {
-          toast.error(`File ${file.name} is too large. Maximum size is 2MB.`);
+          toast.error(`File ${file.name} is too large. Maximum size is 1MB.`);
           return;
         }
 
@@ -59,7 +59,7 @@ export default function ResumeUpload({ onUpload }: ResumeUploadProps) {
                   and drop
                 </p>
                 <p className="text-xs text-zinc-100">
-                  PDF, DOCX, TXT, CSV (max. size: 2MB)
+                  PDF, DOCX, TXT, CSV (max. size: 1MB)
                 </p>
               </div>
               <input

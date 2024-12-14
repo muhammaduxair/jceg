@@ -26,7 +26,7 @@ export default function Home() {
   const [generatedResponse, setGeneratedResponse] =
     useState<IGenerateEmailResponse>({} as IGenerateEmailResponse);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [btnLoadingText, setBtnLoadingText] = useState("");
+  const [btnLoadingText, setBtnLoadingText] = useState(btnLoadingTexts[0]);
   // ==============================
 
   // ====== Callbacks =============
@@ -46,10 +46,14 @@ export default function Home() {
     }
 
     setIsGenerating(true);
-    let i = 0;
+    let i = 1;
     const interval = setInterval(() => {
       setBtnLoadingText(btnLoadingTexts[i]);
-      i = (i + 1) % btnLoadingTexts.length;
+      i++;
+      if (i >= btnLoadingTexts.length) {
+        clearInterval(interval);
+        setBtnLoadingText(btnLoadingTexts[0]);
+      }
     }, 2000);
     // ====== Your Actual Logic Starts Here ======
 
@@ -80,6 +84,7 @@ export default function Home() {
 
     // ====== Your Actual Logic Ends Here ======
     clearInterval(interval);
+    setBtnLoadingText(btnLoadingTexts[0]);
     setIsGenerating(false);
   };
 
