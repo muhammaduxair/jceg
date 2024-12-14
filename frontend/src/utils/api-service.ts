@@ -1,21 +1,18 @@
-type HttpMethod = "GET" | "POST" | "PUT" | "DELETE";
+import { ApiResponse, FetchOptions } from "./interface";
 
-interface FetchOptions extends RequestInit {
-  data?: object | FormData;
-  uploadingFile?: boolean;
-}
+type HttpMethod = "GET" | "POST" | "PUT" | "DELETE";
 
 class ApiService {
   private baseUrl: string;
 
-  constructor(baseUrl: string = "http://127.0.0.1:8000/") {
+  constructor(baseUrl: string = "http://localhost:8000/api/v1/") {
     this.baseUrl = baseUrl;
   }
 
   private async fetchJson<T>(
     endpoint: string,
     options: FetchOptions = {}
-  ): Promise<T> {
+  ): Promise<ApiResponse<T>> {
     const { data, headers, uploadingFile, ...customConfig } = options;
     const method = customConfig.method as HttpMethod;
 
@@ -46,29 +43,47 @@ class ApiService {
       }
     }
 
-    const response = await fetch(`${this.baseUrl}${endpoint}`, config);
+    try {
+      const response = await fetch(`${this.baseUrl}${endpoint}`, config);
 
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      return Promise.reject(
-        new Error(errorData.message || response.statusText)
-      );
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        return {
+          isSuccess: false,
+          data: null,
+          error: errorData.message || response.statusText,
+        };
+      }
+
+      const responseData: T = await response.json();
+      return {
+        isSuccess: true,
+        data: responseData,
+      };
+    } catch (error) {
+      return {
+        isSuccess: false,
+        data: null,
+        error:
+          error instanceof Error ? error.message : "An unknown error occurred",
+      };
     }
-
-    return response.json();
   }
 
-  async get<T>(endpoint: string, options: FetchOptions = {}): Promise<T> {
-    return this.fetchJson(endpoint, { ...options, method: "GET" });
+  async get<T>(
+    endpoint: string,
+    options: FetchOptions = {}
+  ): Promise<ApiResponse<T>> {
+    return this.fetchJson<T>(endpoint, { ...options, method: "GET" });
   }
 
   async post<T>(
     endpoint: string,
     data: object | FormData,
     options: FetchOptions = {}
-  ): Promise<T> {
+  ): Promise<ApiResponse<T>> {
     const isFormData = data instanceof FormData;
-    return this.fetchJson(endpoint, {
+    return this.fetchJson<T>(endpoint, {
       ...options,
       method: "POST",
       data,
@@ -80,9 +95,9 @@ class ApiService {
     endpoint: string,
     data: object | FormData,
     options: FetchOptions = {}
-  ): Promise<T> {
+  ): Promise<ApiResponse<T>> {
     const isFormData = data instanceof FormData;
-    return this.fetchJson(endpoint, {
+    return this.fetchJson<T>(endpoint, {
       ...options,
       method: "PUT",
       data,
@@ -90,8 +105,11 @@ class ApiService {
     });
   }
 
-  async delete<T>(endpoint: string, options: FetchOptions = {}): Promise<T> {
-    return this.fetchJson(endpoint, { ...options, method: "DELETE" });
+  async delete<T>(
+    endpoint: string,
+    options: FetchOptions = {}
+  ): Promise<ApiResponse<T>> {
+    return this.fetchJson<T>(endpoint, { ...options, method: "DELETE" });
   }
 }
 

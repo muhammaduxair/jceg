@@ -1,7 +1,7 @@
-from fastapi import FastAPI, UploadFile, Form
-from fastapi.responses import JSONResponse
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from utils import generate_email, EmailContent, read_file_handler
+from utils import global_exception_handler
+from routers.agent_router import router as agent_router
 
 app = FastAPI()
 
@@ -18,13 +18,8 @@ app.add_middleware(
 )
 
 
-@app.post("/generate-email/", response_model=EmailContent)
-async def generate_cold_email(
-    resume_file: UploadFile,
-    job_description: str = Form(...),
-):
-    resume_text = read_file_handler(resume_file)
+# Add the global exception handler
+app.add_exception_handler(Exception, global_exception_handler)
 
-    email_content = generate_email(resume_text, job_description)
-
-    return JSONResponse(content=email_content)
+# Add routers
+app.include_router(agent_router)

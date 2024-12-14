@@ -5,12 +5,16 @@ from langchain.prompts import PromptTemplate
 from typing import TypedDict, Optional
 from utils import clean_and_parse_json
 import json
+from fastapi import HTTPException
 
 load_dotenv()
 
 if "GROQ_API_KEY" not in os.environ:
     os.environ["GROQ_API_KEY"] = os.getenv("GROQ_API_KEY")
 
+if not os.environ.get("GROQ_API_KEY"):
+    raise HTTPException(
+        status_code=500, detail="GROQ_API_KEY is not set in the environment variables")
 
 llm = ChatGroq(
     model="llama3-70b-8192",
@@ -28,7 +32,11 @@ def generate_email(
     resume_text: str,
     job_description: str,
 ) -> EmailContent:
-   # Create prompt
+    if not resume_text or not job_description:
+        raise HTTPException(
+            status_code=400, detail="Both resume_text and job_description are required")
+
+    # Create prompt
     prompt = PromptTemplate(
         input_variables=["resume", "job_description"],
         template=(
@@ -57,23 +65,27 @@ def generate_email(
         ),
     )
 
-    # Call LLM to generate email content
-    llm_response = llm.invoke(
-        prompt.format(resume=resume_text, job_description=job_description)
-    )
-
-    email_data: dict = clean_and_parse_json(llm_response.content)
+    try:
+        # Call LLM to generate email content
+        llm_response = llm.invoke(
+            prompt.format(resume=resume_text, job_description=job_description)
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, detail=f"Error calling LLM: {str(e)}")
 
     try:
-        return EmailContent(
-            subject=email_data.get("subject", ""),
-            email=email_data.get("email", ""),
-            recipient=email_data.get("recipient", None),
-        )
+        email_data: dict = clean_and_parse_json(llm_response.content)
     except json.JSONDecodeError as e:
-        print(f"JSONDecodeError: {e}")
-        return EmailContent(
-            subject="Something went wrong",
-            email="Please try again.",
-            recipient=None,
-        )
+        raise HTTPException(
+            status_code=422, detail=f"Error parsing LLM response: {str(e)}")
+
+    if not email_data.get("subject") or not email_data.get("email"):
+        raise HTTPException(
+            status_code=422, detail="LLM response is missing required fields")
+
+    return EmailContent(
+        subject=email_data.get("subject", ""),
+        email=email_data.get("email", ""),
+        recipient=email_data.get("recipient", None),
+    )

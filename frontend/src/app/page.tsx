@@ -57,14 +57,23 @@ export default function Home() {
     formData.append("job_description", jobDescription);
 
     const response = await apiService.post<IGenerateEmailResponse>(
-      "generate-email",
+      "agent/generate-email",
       formData,
       {
         uploadingFile: true,
       }
     );
 
-    setGeneratedResponse(response);
+    if (response.isSuccess) {
+      setGeneratedResponse(response.data as IGenerateEmailResponse);
+      setTimeout(() => {
+        document
+          .getElementById("generated-email")
+          ?.scrollIntoView({ behavior: "smooth" });
+      }, 100);
+    } else {
+      alert(response?.error ?? "Failed to generate email. Please try again.");
+    }
 
     // ====== Your Actual Logic Ends Here ======
     clearInterval(interval);

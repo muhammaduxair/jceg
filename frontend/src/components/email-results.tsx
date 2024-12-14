@@ -34,7 +34,9 @@ export default function EmailResults({ data }: EmailResultsProps) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, delay: 0.8 }}
     >
-      <h2 className="text-2xl font-semibold mb-4">Generated Email</h2>
+      <h2 className="text-2xl font-semibold mb-4" id="generated-email">
+        Generated Email
+      </h2>
       {data.recipient && (
         <Card className="bg-zinc-800 border-zinc-700">
           <CardHeader>
