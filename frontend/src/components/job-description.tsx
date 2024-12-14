@@ -25,9 +25,10 @@ export default function JobDescription({
         <Textarea
           id="job-description"
           placeholder="Enter the job description..."
-          className="h-52 bg-zinc-800 border-zinc-700 text-white placeholder-zinc-300 placeholder:text-zinc-300"
+          className="bg-zinc-800 border-zinc-700 text-white placeholder-zinc-300 placeholder:text-zinc-300"
           value={value}
           onChange={(e) => onChange(e.target.value)}
+          rows={10}
         />
       </div>
     </motion.div>

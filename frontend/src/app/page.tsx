@@ -9,6 +9,7 @@ import { useNavigationHeight } from "@/hooks/use-navigation-height";
 import { useCallback, useState } from "react";
 import { IGenerateEmailResponse } from "@/utils";
 import apiService from "@/utils/api-service";
+import toast from "react-hot-toast";
 
 const btnLoadingTexts = [
   "Loading your resume",
@@ -40,7 +41,7 @@ export default function Home() {
 
   const handleGenerate = async () => {
     if (!resume || !jobDescription) {
-      alert("Please upload a resume and enter a job description.");
+      toast.error("Please upload a resume and enter a job description.");
       return;
     }
 
@@ -72,7 +73,9 @@ export default function Home() {
           ?.scrollIntoView({ behavior: "smooth" });
       }, 100);
     } else {
-      alert(response?.error ?? "Failed to generate email. Please try again.");
+      toast.error(
+        response?.error ?? "Failed to generate email. Please try again."
+      );
     }
 
     // ====== Your Actual Logic Ends Here ======
