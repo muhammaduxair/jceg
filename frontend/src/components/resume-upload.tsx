@@ -4,6 +4,9 @@ import { useCallback, useState } from "react";
 import { motion } from "framer-motion";
 import { Upload } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import toast from "react-hot-toast";
+
+const MAX_FILE_SIZE = 2 * 1024 * 1025; // 2MB in bytes
 
 interface ResumeUploadProps {
   onUpload: (file: File) => void;
@@ -15,7 +18,19 @@ export default function ResumeUpload({ onUpload }: ResumeUploadProps) {
   const handleFileChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
-      if (file) {
+      if (file instanceof File) {
+        if (!file.name.match(/\.(pdf|docx|txt|csv)$/)) {
+          toast.error(
+            "Invalid file type. Please upload a PDF, DOCX, TXT, or CSV file."
+          );
+          return;
+        }
+
+        if (file.size > MAX_FILE_SIZE) {
+          toast.error(`File ${file.name} is too large. Maximum size is 2MB.`);
+          return;
+        }
+
         setFile(file);
         onUpload(file);
       }
