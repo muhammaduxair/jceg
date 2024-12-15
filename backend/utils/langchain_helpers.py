@@ -18,7 +18,7 @@ if not os.environ.get("GROQ_API_KEY"):
 
 llm = ChatGroq(
     model="llama3-70b-8192",
-    temperature=0,
+    temperature=0.0,
 )
 
 
