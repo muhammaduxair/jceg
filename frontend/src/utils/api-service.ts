@@ -5,7 +5,7 @@ type HttpMethod = "GET" | "POST" | "PUT" | "DELETE";
 class ApiService {
   private baseUrl: string;
 
-  constructor(baseUrl: string = "http://localhost:8000/api/v1/") {
+  constructor(baseUrl: string = process.env["NEXT_PUBLIC_API_URL"] ?? "") {
     this.baseUrl = baseUrl;
   }
 
