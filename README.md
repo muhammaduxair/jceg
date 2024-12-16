@@ -1,4 +1,4 @@
-# AI Job Cold Email Generator (This is not a Toy Project 😀)
+## AI Job Cold Email Generator (This is not a Toy Project 😀)
 
 AI Job Cold Email Generator is a web application that helps users create professional cold emails tailored for job applications using AI. The application is split into two parts: a **frontend** built with Next.js and a **backend** developed with FastAPI.
 
