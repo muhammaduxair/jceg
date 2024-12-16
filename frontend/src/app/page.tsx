@@ -62,7 +62,7 @@ export default function Home() {
       i++;
       if (i >= btnLoadingTexts.length) {
         clearInterval(interval);
-        setBtnLoadingText(btnLoadingTexts[0]);
+        setBtnLoadingText(btnLoadingTexts[btnLoadingTexts.length - 1]);
       }
     }, 2000);
     // ====== Your Actual Logic Starts Here ======

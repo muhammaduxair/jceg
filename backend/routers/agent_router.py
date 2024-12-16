@@ -30,7 +30,7 @@ async def generate_cold_email(
     if job_description_url:
         document_data = load_web_document(job_description_url)
         clean_document_data = clean_scraped_text(document_data)
-        # if data is more than 2000 words, just grab the first 2000 words
+        # Grab the first 2000 characters of the job description
         job_description_actual_text = clean_document_data[:2000]
 
     resume_text = await read_file_handler(resume_file)
