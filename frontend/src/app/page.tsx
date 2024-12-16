@@ -10,6 +10,7 @@ import { useCallback, useEffect, useState } from "react";
 import { IGenerateEmailResponse } from "@/utils";
 import apiService from "@/utils/api-service";
 import toast from "react-hot-toast";
+import { InfoIcon } from "lucide-react";
 
 const btnLoadingTexts = [
   "Loading your resume",
@@ -122,7 +123,16 @@ export default function Home() {
           isGenerating={isGenerating}
           btnLoadingText={btnLoadingText}
         />
-        {generatedResponse.email && <EmailResults data={generatedResponse} />}
+        {generatedResponse.email && (
+          <>
+            <EmailResults data={generatedResponse} />
+            <p className="text-xs text-zinc-200 text-center leading-5">
+              <InfoIcon className="inline-block w-3 h-3 mr-1 -mt-1" />
+              This AI-powered job cold email generator may produce imperfect
+              results. Please review and edit any generated content before use.
+            </p>
+          </>
+        )}
       </div>
     </main>
   );

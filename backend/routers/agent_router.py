@@ -40,6 +40,6 @@ async def generate_cold_email(
             status_code=400, detail="Resume text is too long. Please upload a shorter resume.")
 
     email_content = generate_email(
-        resume_text.strip(), job_description_actual_text)
+        resume_text=resume_text.strip(), job_description=job_description_actual_text)
 
     return JSONResponse(content=email_content)
