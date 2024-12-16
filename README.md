@@ -38,7 +38,7 @@ cd jceg
 3. Set up environment variables:
    - For development, use `.env.local`. Example:
      ```env
-     NEXT_PUBLIC_API_URL=NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1/
+     NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1/
      ```
    - For production, create `.env.production`:
      ```env
