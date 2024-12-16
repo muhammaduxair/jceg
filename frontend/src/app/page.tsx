@@ -6,7 +6,7 @@ import JobDescription from "@/components/job-description";
 import GenerateButton from "@/components/generate-button";
 import EmailResults from "@/components/email-results";
 import { useNavigationHeight } from "@/hooks/use-navigation-height";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { IGenerateEmailResponse } from "@/utils";
 import apiService from "@/utils/api-service";
 import toast from "react-hot-toast";
@@ -23,6 +23,9 @@ export default function Home() {
   // ====== State Management ======
   const [resume, setResume] = useState<File | null>(null);
   const [jobDescription, setJobDescription] = useState("");
+  const [jobDescActiveTab, setJobDescActiveTab] = useState<"paste" | "url">(
+    "paste"
+  );
   const [generatedResponse, setGeneratedResponse] =
     useState<IGenerateEmailResponse>({} as IGenerateEmailResponse);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -37,6 +40,12 @@ export default function Home() {
   const handleJobDescriptionChange = useCallback((description: string) => {
     setJobDescription(description);
   }, []);
+  // ==============================
+
+  // ====== Use Effect ============
+  useEffect(() => {
+    setJobDescription("");
+  }, [jobDescActiveTab]);
   // ==============================
 
   const handleGenerate = async () => {
@@ -59,7 +68,12 @@ export default function Home() {
 
     const formData = new FormData();
     formData.append("resume_file", resume as File);
-    formData.append("job_description", jobDescription);
+
+    if (jobDescActiveTab === "url") {
+      formData.append("job_description_url", jobDescription);
+    } else {
+      formData.append("job_description", jobDescription);
+    }
 
     const response = await apiService.post<IGenerateEmailResponse>(
       "agent/generate-email",
@@ -101,6 +115,7 @@ export default function Home() {
         <JobDescription
           value={jobDescription}
           onChange={handleJobDescriptionChange}
+          setActiveTab={setJobDescActiveTab}
         />
         <GenerateButton
           onClick={handleGenerate}

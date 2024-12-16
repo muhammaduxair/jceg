@@ -9,3 +9,5 @@ uvicorn
 pandas
 chardet
 python-multipart
+beautifulsoup4
+langchain_community
