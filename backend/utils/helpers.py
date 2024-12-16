@@ -1,3 +1,5 @@
+from typing import List
+from html import unescape
 import json
 import re
 from fastapi import HTTPException
@@ -61,3 +63,37 @@ def clean_and_parse_json(response):
     except Exception as e:
         raise HTTPException(
             status_code=500, detail=f"Unexpected error while cleaning and parsing JSON: {str(e)}")
+
+
+def clean_scraped_text(text: str) -> str:
+    """
+    Clean text obtained from web scraping.
+
+    Args:
+    text (str): The input text to be cleaned.
+
+    Returns:
+    str: The cleaned text.
+    """
+    # Unescape HTML entities
+    text = unescape(text)
+
+    # Remove extra whitespace
+    text = ' '.join(text.split())
+
+    # Remove special characters and symbols
+    text = re.sub(r'[^\w\s.,!?-]', '', text)
+
+    # Normalize whitespace around punctuation
+    text = re.sub(r'\s([.,!?])', r'\1', text)
+    text = re.sub(r'([.,!?])\s', r'\1 ', text)
+
+    # Capitalize the first letter of sentences
+    sentences = re.split(r'([.!?])\s*', text)
+    capitalized_sentences = []
+    for i in range(0, len(sentences) - 1, 2):
+        sentence = sentences[i].capitalize() + sentences[i + 1]
+        capitalized_sentences.append(sentence)
+    text = ' '.join(capitalized_sentences)
+
+    return text.strip()
